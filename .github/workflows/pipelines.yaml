@@ -1,0 +1,43 @@
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: []
+
+jobs:
+  BuildPackage:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+      # Build Steps
+      - name: Build
+        run: uv build
+      - name: Upload Build Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_artifacts
+          path: dist/*
+
+  CodeLinting:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+      - name: Sync
+        run: uv sync
+        # Linting Steps
+      - name: Pre-Commit
+        env:
+          # Found these unreliable in CI 17/1/25
+          SKIP: "mypy, pytest, uv-lock"
+        run: uv run pre-commit run --all-files
+      - name: MyPy
+        run: uv run mypy .

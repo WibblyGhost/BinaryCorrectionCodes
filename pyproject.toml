@@ -1,0 +1,186 @@
+### BUILD SYSTEM ###
+# NOTE: See https://peps.python.org/pep-0621/
+[build-system]
+requires = ["setuptools>=60", "setuptools-git-versioning"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "binarycorrectioncodes"
+description="Binary Correction Codes"
+authors=[{name="WibblyGhost"}]
+# Files
+dynamic = ["version"]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+# Indexing
+keywords = [
+    "binary",
+    "correction",
+    "cyclic",
+    "ecc",
+    "error correction",
+    "golay",
+    "hamming",
+    "reed-solomon",
+    "reedsolomon",
+]
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 5 - Production/Stable",
+
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Disassemblers",
+    "Topic :: Software Development :: Embedded Systems",
+    "Topic :: System :: Networking",
+    "Topic :: Utilities",
+
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+# Requirements
+requires-python= ">=3.13"
+dependencies = [
+    "bitstructures>=1.0.2",
+]
+
+[project.urls]
+# Homepage = "https://example.com"
+# Documentation = "https://readthedocs.org"
+Repository = "https://github.com/WibblyGhost/binarycorrectioncodes.git"
+Issues = "https://github.com/WibblyGhost/binarycorrectioncodes/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "faker>=33.3.1",
+    "mypy>=1.14.1",
+    "pre-commit>=4.0.0",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-timeout>=2.3.1",
+    "ruff>=0.9.1",
+    "mypy-gitlab-code-quality>=1.1.0",
+]
+build = [
+    "setuptools>=60",
+    "setuptools-git-versioning>=2.1.0",
+]
+
+[tool.setuptools-git-versioning]
+enabled = true
+dev_template = "{tag}"
+dirty_template = "{tag}"
+
+[tool.setuptools.dynamic]
+readme = {file = "README.md"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["*tests*"]
+
+[tool.setuptools.package-data]
+"pkgname" = ["py.typed"]
+### BUILD SYSTEM ###
+
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "F",  # pyflakes
+    "E",  # pycodestyle
+    "W",  # pycodestyle
+    "D",  # pydocstyle
+    "I",  # isort
+    "N",  # pep8-naming
+    "UP",  # pyupgrade
+    "R",  # refactor
+    "ASYNC",  # flake8-async
+    "BLE",  # flake8-blind-except
+    "B",  # flake8-bugbear
+    "A",  # flake8-buildins
+    "C4",  # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "LOG",  # flake8-logging
+    "PT",  # felake8-pytest-style
+    "Q",  # flake8-quotes
+    "RET",  #  flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "FIX",  # flake8-fixme
+    "PL",  # pylint
+    "RUF",  # ruff
+]
+fixable = ["ALL"]
+ignore = [
+    "D203",  # Incorrect black line before class
+    "D100",  # Docstring in public module
+    "D105",  # Docstring in magic method
+    "D212",  # Multiline Docstring Start
+    "D413",  # Missing blank line after section
+    "D401",  # Docstring imperative mood
+    "D107",  # Docstring in __init__  # We use the public class docstrings
+    "D415",  # First line should end with period, ? or !
+    "D102",  # Missing public docstring  # Remove Later
+    "D105",  # Missing docstring in magic method
+    "D417",  # Missing argument descriptions
+    "D101",  # Missing docstring in public class
+]
+isort.split-on-trailing-comma = false
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["D104"]
+"tests/*.py" = ["SLF001", "PT013", "D"]
+"src/binarycorrectioncodes/*.py" = ["RUF002", "RUF003", "E741", "N806", "N803", "N801"]
+
+[tool.ruff.format]
+# skip-magic-trailing-comma = true
+
+[tool.mypy]
+exclude = [".*tests/", "test.py"]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+extra_checks = true
+implicit_optional = true
+no_implicit_reexport = true
+no_warn_no_return = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report=xml --cov-report=term  --cov-report=html"  # --cov-fail-under=100
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+]
